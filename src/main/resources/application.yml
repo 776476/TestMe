@@ -15,13 +15,13 @@ spring:
       enabled: true
       additional-paths: src/main/java
   datasource:
-    url: jdbc:mysql://localhost:3306/demo_db?useSSL=false&characterEncoding=utf8&zeroDateTimeBehavior=CONVERT_To_NULL&serverTimezone=Asia/Shanghai
+    url: jdbc:mysql://localhost:3306/demo_db?useSSL=false&allowPublicKeyRetrieval=true&characterEncoding=utf8&zeroDateTimeBehavior=CONVERT_To_NULL&serverTimezone=Asia/Shanghai
     username: root
-    password: password
+    password: 123456
     driver-class-name: com.mysql.cj.jdbc.Driver
   jpa:
     hibernate:
-       ddl-auto: update
+      ddl-auto: update
     database: mysql
     show-sql: true
   servlet:

@@ -10,6 +10,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.domain.Pageable;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.web.util.NestedServletException;
 
 import java.util.Arrays;
 import java.util.List;
@@ -91,7 +92,7 @@ class AdminMessageControllerIT {
     void passMessageFailsWhenServiceThrows() throws Exception {
         doThrow(new RuntimeException("missing message")).when(messageService).confirmMessage(999);
 
-        assertThrows(Exception.class,
+        assertThrows(NestedServletException.class,
                 () -> mockMvc.perform(post("/passMessage.do").param("messageID", "999")).andReturn());
     }
 
@@ -108,7 +109,7 @@ class AdminMessageControllerIT {
     void rejectMessageFailsWhenServiceThrows() throws Exception {
         doThrow(new RuntimeException("missing message")).when(messageService).rejectMessage(999);
 
-        assertThrows(Exception.class,
+        assertThrows(NestedServletException.class,
                 () -> mockMvc.perform(post("/rejectMessage.do").param("messageID", "999")).andReturn());
     }
 

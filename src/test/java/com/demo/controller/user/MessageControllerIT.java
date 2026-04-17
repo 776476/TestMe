@@ -11,6 +11,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.domain.Pageable;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.web.util.NestedServletException;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -70,7 +71,7 @@ class MessageControllerIT {
                 .thenReturn(firstPage(Collections.singletonList(message(1, "user01", 2)), 5, 1));
         when(messageVoService.returnVo(any())).thenReturn(Collections.singletonList(messageVo(1, "user01", 2)));
 
-        assertThrows(Exception.class, () -> mockMvc.perform(get("/message_list")).andReturn());
+        assertThrows(NestedServletException.class, () -> mockMvc.perform(get("/message_list")).andReturn());
     }
 
     @Test
@@ -115,7 +116,7 @@ class MessageControllerIT {
 
     @Test
     void getUserMessageListFailsWhenUserIsNotLoggedIn() throws Exception {
-        assertThrows(Exception.class, () -> mockMvc.perform(get("/message/findUserList")).andReturn());
+        assertThrows(NestedServletException.class, () -> mockMvc.perform(get("/message/findUserList")).andReturn());
     }
 
     @Test
@@ -173,7 +174,7 @@ class MessageControllerIT {
     void modifyMessageFailsWhenMessageDoesNotExist() throws Exception {
         when(messageService.findById(999)).thenReturn(null);
 
-        assertThrows(Exception.class, () -> mockMvc.perform(post("/modifyMessage.do")
+        assertThrows(NestedServletException.class, () -> mockMvc.perform(post("/modifyMessage.do")
                 .param("messageID", "999")
                 .param("content", "Updated text")).andReturn());
 

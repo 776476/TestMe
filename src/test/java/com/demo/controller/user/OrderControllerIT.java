@@ -15,6 +15,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.web.util.NestedServletException;
 
 import java.time.LocalDateTime;
 import java.util.Arrays;
@@ -72,7 +73,7 @@ class OrderControllerIT {
 
     @Test
     void orderManageFailsWhenUserIsNotLoggedIn() throws Exception {
-        assertThrows(Exception.class, () -> mockMvc.perform(get("/order_manage")).andReturn());
+        assertThrows(NestedServletException.class, () -> mockMvc.perform(get("/order_manage")).andReturn());
     }
 
     @Test
@@ -113,7 +114,7 @@ class OrderControllerIT {
 
     @Test
     void getOrderListFailsWhenUserIsNotLoggedIn() throws Exception {
-        assertThrows(Exception.class, () -> mockMvc.perform(get("/getOrderList.do")).andReturn());
+        assertThrows(NestedServletException.class, () -> mockMvc.perform(get("/getOrderList.do")).andReturn());
     }
 
     @Test
@@ -136,7 +137,7 @@ class OrderControllerIT {
 
     @Test
     void addOrderFailsWhenUserIsNotLoggedIn() throws Exception {
-        assertThrows(Exception.class, () -> mockMvc.perform(post("/addOrder.do")
+        assertThrows(NestedServletException.class, () -> mockMvc.perform(post("/addOrder.do")
                 .param("venueName", "Arena A")
                 .param("date", "ignored")
                 .param("startTime", "2026-04-09 09:00")
@@ -147,7 +148,7 @@ class OrderControllerIT {
 
     @Test
     void addOrderFailsForInvalidStartTimeFormat() throws Exception {
-        assertThrows(Exception.class, () -> mockMvc.perform(post("/addOrder.do")
+        assertThrows(NestedServletException.class, () -> mockMvc.perform(post("/addOrder.do")
                 .session(userSession())
                 .param("venueName", "Arena A")
                 .param("date", "ignored")
@@ -168,7 +169,7 @@ class OrderControllerIT {
     void finishOrderFailsWhenServiceThrows() throws Exception {
         doThrow(new RuntimeException("missing order")).when(orderService).finishOrder(999);
 
-        assertThrows(Exception.class,
+        assertThrows(NestedServletException.class,
                 () -> mockMvc.perform(post("/finishOrder.do").param("orderID", "999")).andReturn());
     }
 
@@ -207,7 +208,7 @@ class OrderControllerIT {
 
     @Test
     void modifyOrderFailsWhenUserIsNotLoggedIn() throws Exception {
-        assertThrows(Exception.class, () -> mockMvc.perform(post("/modifyOrder")
+        assertThrows(NestedServletException.class, () -> mockMvc.perform(post("/modifyOrder")
                 .param("venueName", "Arena A")
                 .param("date", "ignored")
                 .param("startTime", "2026-04-10 10:00")
@@ -217,7 +218,7 @@ class OrderControllerIT {
 
     @Test
     void modifyOrderFailsForInvalidStartTimeFormat() throws Exception {
-        assertThrows(Exception.class, () -> mockMvc.perform(post("/modifyOrder")
+        assertThrows(NestedServletException.class, () -> mockMvc.perform(post("/modifyOrder")
                 .session(userSession())
                 .param("venueName", "Arena A")
                 .param("date", "ignored")
@@ -239,7 +240,8 @@ class OrderControllerIT {
     void deleteOrderFailsWhenServiceThrows() throws Exception {
         doThrow(new RuntimeException("delete failed")).when(orderService).delOrder(999);
 
-        assertThrows(Exception.class, () -> mockMvc.perform(post("/delOrder.do").param("orderID", "999")).andReturn());
+        assertThrows(NestedServletException.class,
+                () -> mockMvc.perform(post("/delOrder.do").param("orderID", "999")).andReturn());
     }
 
     @Test
@@ -261,14 +263,14 @@ class OrderControllerIT {
     void getVenueOrdersFailsWhenVenueIsMissing() throws Exception {
         when(venueService.findByVenueName("Missing Arena")).thenReturn(null);
 
-        assertThrows(Exception.class, () -> mockMvc.perform(get("/order/getOrderList.do")
+        assertThrows(NestedServletException.class, () -> mockMvc.perform(get("/order/getOrderList.do")
                 .param("venueName", "Missing Arena")
                 .param("date", "2026-04-09")).andReturn());
     }
 
     @Test
     void getVenueOrdersFailsForInvalidDateFormat() throws Exception {
-        assertThrows(Exception.class, () -> mockMvc.perform(get("/order/getOrderList.do")
+        assertThrows(NestedServletException.class, () -> mockMvc.perform(get("/order/getOrderList.do")
                 .param("venueName", "Arena A")
                 .param("date", "bad")).andReturn());
     }

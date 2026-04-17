@@ -9,6 +9,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.web.util.NestedServletException;
 
 import static com.demo.support.ITDataFactory.admin;
 import static com.demo.support.ITDataFactory.user;
@@ -119,7 +120,7 @@ class UserControllerIT {
     void registerPropagatesCreateFailure() throws Exception {
         doThrow(new RuntimeException("duplicate user")).when(userService).create(any(User.class));
 
-        assertThrows(Exception.class, () -> mockMvc.perform(post("/register.do")
+        assertThrows(NestedServletException.class, () -> mockMvc.perform(post("/register.do")
                 .param("userID", "user02")
                 .param("userName", "User Two")
                 .param("password", "pw123")
@@ -203,7 +204,7 @@ class UserControllerIT {
         when(userService.findByUserID("missing")).thenReturn(null);
         MockMultipartFile emptyPicture = new MockMultipartFile("picture", "", "application/octet-stream", new byte[0]);
 
-        assertThrows(Exception.class, () -> mockMvc.perform(multipart("/updateUser.do")
+        assertThrows(NestedServletException.class, () -> mockMvc.perform(multipart("/updateUser.do")
                 .file(emptyPicture)
                 .session(userSession())
                 .param("userName", "Updated User")

@@ -1,6 +1,8 @@
 .vscode/
 .cursor/
+.idea/
 
 .DS_Store
 
 target/
+src/test/java/com/demo/service/impl/*.zip

@@ -9,6 +9,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.domain.Pageable;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.web.util.NestedServletException;
 
 import java.util.Arrays;
 import java.util.List;
@@ -69,7 +70,7 @@ class AdminNewsControllerIT {
 
     @Test
     void newsEditReturnsBadRequestWhenIdIsMissing() throws Exception {
-        assertThrows(Exception.class, () -> mockMvc.perform(get("/news_edit")).andReturn());
+        assertThrows(NestedServletException.class, () -> mockMvc.perform(get("/news_edit")).andReturn());
     }
 
     @Test

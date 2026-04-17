@@ -9,6 +9,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.domain.Pageable;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.web.util.NestedServletException;
 
 import java.util.Arrays;
 import java.util.List;
@@ -30,7 +31,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
-
 @WebMvcTest(AdminUserController.class)
 class AdminUserControllerIT {
     @Autowired
@@ -92,7 +92,7 @@ class AdminUserControllerIT {
 
     @Test
     void userEditReturnsBadRequestWhenIdIsMissing() throws Exception {
-        assertThrows(Exception.class, () -> mockMvc.perform(get("/user_edit")).andReturn());
+        assertThrows(NestedServletException.class, () -> mockMvc.perform(get("/user_edit")).andReturn());
     }
 
     @Test
@@ -122,7 +122,7 @@ class AdminUserControllerIT {
     void modifyUserFailsWhenOldUserIdDoesNotExist() throws Exception {
         when(userService.findByUserID("missing")).thenReturn(null);
 
-        assertThrows(Exception.class, () -> mockMvc.perform(post("/modifyUser.do")
+        assertThrows(NestedServletException.class, () -> mockMvc.perform(post("/modifyUser.do")
                 .param("userID", "user02")
                 .param("oldUserID", "missing")
                 .param("userName", "Updated User")

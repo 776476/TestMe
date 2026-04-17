@@ -10,6 +10,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.domain.Pageable;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.web.util.NestedServletException;
 
 import java.util.Arrays;
 import java.util.List;
@@ -100,7 +101,8 @@ class AdminOrderControllerIT {
     void passOrderFailsWhenServiceThrows() throws Exception {
         doThrow(new RuntimeException("missing order")).when(orderService).confirmOrder(999);
 
-        assertThrows(Exception.class, () -> mockMvc.perform(post("/passOrder.do").param("orderID", "999")).andReturn());
+        assertThrows(NestedServletException.class,
+                () -> mockMvc.perform(post("/passOrder.do").param("orderID", "999")).andReturn());
     }
 
     @Test
@@ -116,7 +118,7 @@ class AdminOrderControllerIT {
     void rejectOrderFailsWhenServiceThrows() throws Exception {
         doThrow(new RuntimeException("missing order")).when(orderService).rejectOrder(999);
 
-        assertThrows(Exception.class,
+        assertThrows(NestedServletException.class,
                 () -> mockMvc.perform(post("/rejectOrder.do").param("orderID", "999")).andReturn());
     }
 }
